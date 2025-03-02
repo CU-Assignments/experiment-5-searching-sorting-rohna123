@@ -1,0 +1,77 @@
+// first problem merge sort //
+def merge(nums1, m, nums2, n):
+    # Start from the end of nums1 array
+    i = m - 1  # last valid element in nums1
+    j = n - 1  # last element in nums2
+    k = m + n - 1  # end of nums1 array (last index)
+    
+    # Merge arrays while there are elements in nums1 and nums2 to compare
+    while i >= 0 and j >= 0:
+        if nums1[i] > nums2[j]:
+            nums1[k] = nums1[i]
+            i -= 1
+        else:
+            nums1[k] = nums2[j]
+            j -= 1
+        k -= 1
+    
+    # If there are any elements left in nums2, move them to nums1
+    while j >= 0:
+        nums1[k] = nums2[j]
+        j -= 1
+        k -= 1
+    
+    # No need to handle the case for nums1 because it's already in place.
+
+//2nd problem BAD VERSION //
+def firstBadVersion(n):
+    left, right = 1, n
+    while left < right:
+        mid = left + (right - left) // 2
+        if isBadVersion(mid):
+            right = mid  # Narrow down the search to the left half
+        else:
+            left = mid + 1  # Narrow down the search to the right half
+    return left
+
+//3rd problem  DUTCH national flag problem //
+def sortColors(nums):
+    low, mid, high = 0, 0, len(nums) - 1
+    
+    while mid <= high:
+        if nums[mid] == 0:
+            nums[low], nums[mid] = nums[mid], nums[low]
+            low += 1
+            mid += 1
+        elif nums[mid] == 1:
+            mid += 1
+        else:  # nums[mid] == 2
+            nums[high], nums[mid] = nums[mid], nums[high]
+            high -= 1
+    
+    return nums
+
+
+//4th problem Bucket sort //
+from collections import Counter
+
+def topKFrequent(nums, k):
+    # Step 1: Count the frequency of each element in nums
+    freq_map = Counter(nums)
+    
+    # Step 2: Create buckets where index represents frequency
+    # Bucket[i] will store all elements that appear i times
+    max_freq = max(freq_map.values())
+    buckets = [[] for _ in range(max_freq + 1)]  # Create bucket from 0 to max_freq
+    
+    # Step 3: Place each number in the corresponding bucket based on its frequency
+    for num, freq in freq_map.items():
+        buckets[freq].append(num)
+    
+    # Step 4: Collect the k most frequent elements
+    result = []
+    for i in range(max_freq, 0, -1):
+        for num in buckets[i]:
+            result.append(num)
+            if len(result) == k:
+                return result
